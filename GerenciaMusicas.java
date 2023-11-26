@@ -30,7 +30,10 @@ public class GerenciaMusicas {
             break;
           }
           case 3: {
-            musicaDAO.listar();
+            var musicas = musicaDAO.listar();
+            for (Musica musica : musicas) {
+              JOptionPane.showMessageDialog(null, musica);
+            }
             break;
           }
 

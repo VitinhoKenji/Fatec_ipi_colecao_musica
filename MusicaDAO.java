@@ -1,7 +1,6 @@
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-
-import javax.swing.JOptionPane;
+import java.util.ArrayList;
 
 public class MusicaDAO {
 
@@ -26,8 +25,10 @@ public class MusicaDAO {
     }
   }
 
-  public void listar() throws Exception {
-    var sql = "SELECT titulo, avaliacao FROM tb_musica";
+  public ArrayList<Musica> listar() throws Exception {
+    var sql = "SELECT titulo, avaliacao FROM tb_musica where ativo = true";
+    var musicas = new ArrayList<Musica>();
+
     try (
         var conexao = ConnectionFactory.conectar();
         var ps = conexao.prepareStatement(sql);
@@ -39,12 +40,12 @@ public class MusicaDAO {
           int avaliacao = rs.getInt("avaliacao");
           String titulo = rs.getString("titulo");
           var musica = new Musica(titulo, avaliacao);
-          // exibir com um JOP (Não faça isso!!!)
-          JOptionPane.showMessageDialog(null, musica);
+          musicas.add(musica);
         }
       }
-
     }
+    musicas.sort(new ComparadorAvaliacao());
+    return musicas;
   }
 
   public void desativar(String titulo) throws Exception {
